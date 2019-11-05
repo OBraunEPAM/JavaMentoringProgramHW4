@@ -1,5 +1,9 @@
+package common;
+
+import PageObjects.MailRuCommonPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
@@ -11,6 +15,7 @@ public class SetupClass {
 
     protected WebDriver driver;
     protected WebDriverWait driverWait;
+    protected MailRuCommonPage commonPage;
 
     @BeforeClass(alwaysRun = true)
     public void setUpDriverDirectory() {
@@ -22,6 +27,7 @@ public class SetupClass {
         driver = new ChromeDriver();
         driverWait = new WebDriverWait(driver, 10);
         driver.manage().window().maximize();
+        commonPage = PageFactory.initElements(driver, MailRuCommonPage.class);
     }
 
     @AfterClass(alwaysRun = true)
