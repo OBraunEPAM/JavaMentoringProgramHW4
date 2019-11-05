@@ -146,11 +146,12 @@ public class MailRuCommonPage {
 
     public void saveAsDraftAndClose() {
         saveNewEmailButton.click();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(saveEMailToaster));
+        WebDriverWait driverWait = new WebDriverWait(driver, 10);
+        driverWait.until(ExpectedConditions.visibilityOf(saveEMailToaster));
         closeNewEmailWindowButton.click();
         // for some reason invisibilityOf method doesn't work when WebElement is passed as an argument
         //new WebDriverWait(driver, 10 ).until(ExpectedConditions.invisibilityOf(newEmailWindow));
-        new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
+        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
 
     }
 
@@ -162,21 +163,23 @@ public class MailRuCommonPage {
 
     public void checkContentOfDraftEmail(Emails autotestEmail) {
         driver.findElement(By.xpath("//*[text()='" + autotestEmail.getSubject() + "']")).click();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(newEMailTextarea));
+        WebDriverWait driverWait = new WebDriverWait(driver, 10);
+        driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
         assertEquals(filledAddresseeTextfield.getText(), autotestEmail.getAddressee());
         assertEquals(subjectTextfield.getAttribute("value"), autotestEmail.getSubject());
         assertTrue(newEMailTextarea.getText().contains(autotestEmail.getText()));
         closeNewEmailWindowButton.click();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
+        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
 
     public void sendEmailFromDraft(Emails autotestEmail) {
         driver.findElement(By.xpath("//*[text()='" + autotestEmail.getSubject() + "']")).click();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(newEMailTextarea));
+        WebDriverWait driverWait = new WebDriverWait(driver, 10);
+        driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
         sendNewEmailButton.click();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
+        driverWait.until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
         closeConfirmationWindowButton.click();
-        new WebDriverWait(driver, 10).until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
+        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
 
     public void checkEmailIsNotInTheDraftFolder(Emails autotestEmail) {
