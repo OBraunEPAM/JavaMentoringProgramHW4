@@ -3,14 +3,15 @@ package HW4;
 import org.openqa.selenium.By;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
+import common.SetupClass;
 
 import static org.testng.Assert.*;
 
-public class MainClassTest extends SetupClass{
+public class MainClassTest extends SetupClass {
 
     @Test
     public void sendMailTest() {
-        
+
         // 1 open site by URL
         driver.navigate().to("https://mail.ru/");
 

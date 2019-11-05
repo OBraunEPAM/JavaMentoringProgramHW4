@@ -1,5 +1,3 @@
-package HW4;
-
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -11,8 +9,8 @@ import static java.lang.System.setProperty;
 
 public class SetupClass {
 
-    WebDriver driver;
-    WebDriverWait driverWait;
+    protected WebDriver driver;
+    protected WebDriverWait driverWait;
 
     @BeforeClass(alwaysRun = true)
     public void setUpDriverDirectory() {
