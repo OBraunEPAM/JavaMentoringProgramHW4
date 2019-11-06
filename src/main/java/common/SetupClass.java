@@ -5,9 +5,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.*;
 
 import static java.lang.System.setProperty;
 
@@ -17,12 +15,12 @@ public class SetupClass {
     protected WebDriverWait driverWait;
     protected MailRuCommonPage commonPage;
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeSuite(alwaysRun = true)
     public void setUpDriverDirectory() {
         setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
     }
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeClass(alwaysRun = true)
     public void setUpDriver() {
         driver = new ChromeDriver();
         driverWait = new WebDriverWait(driver, 10);
@@ -30,7 +28,7 @@ public class SetupClass {
         commonPage = PageFactory.initElements(driver, MailRuCommonPage.class);
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterSuite(alwaysRun = true)
     public void tearDown() {
         driver.quit();
     }
