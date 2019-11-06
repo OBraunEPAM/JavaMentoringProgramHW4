@@ -1,7 +1,5 @@
 package HW4;
 
-import org.junit.FixMethodOrder;
-import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -16,7 +14,6 @@ public class MainClassTest extends SetupClass {
     private WebElement loginForm;
     private WebElement passwordForm;
     private WebElement loginButton;
-    private WebElement basicFolderContainer;
     private WebElement basicFolderTable;
     private WebElement subjectTitleField;
     private WebElement closeNewEmailDialogButton;
@@ -48,8 +45,6 @@ public class MainClassTest extends SetupClass {
         // 4 create new e-mail
         driver.findElement(By.xpath("//span[@title='Написать письмо']")).click();
         driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'editable-container')]")));
-
-        basicFolderContainer = driver.findElement(By.xpath("//div[contains(@class, 'editable-container')]"));
 
         driver.findElement(By.xpath("//div[@data-type='to']//input[@type='text']")).sendKeys("autotest_autotest@mail.ru");
 
