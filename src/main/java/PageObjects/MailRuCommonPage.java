@@ -6,7 +6,6 @@ import enums.MailRuData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -19,6 +18,8 @@ import static org.testng.Assert.*;
 public class MailRuCommonPage {
 
     private WebDriver driver;
+
+    static int numberOfEmailsInFolderCounter;
 
     /**
      * General elements
@@ -68,11 +69,14 @@ public class MailRuCommonPage {
     @FindBy(xpath = "//span[@title='Отправить']")
     private WebElement sendNewEmailButton;
 
-    @FindBy(xpath = "//div[contains(@class, 'dimmer')]")
-    private WebElement newEmailWindow;
-
     @FindBy(xpath = "//span[@title='Сохранить']")
     private WebElement saveNewEmailButton;
+
+    @FindBy(xpath = "//span[@title='Отменить']")
+    private WebElement abortNewEmailButton;
+
+    @FindBy(xpath = "//div[contains(@class, 'dimmer')]")
+    private WebElement newEmailWindow;
 
     @FindBy(xpath = "//span[@class='notify__message__text']")
     private WebElement saveEMailToaster;
@@ -104,12 +108,17 @@ public class MailRuCommonPage {
     }
 
     public void login(Credentials autotestUser) {
-        usernameTextfield.click();
-        usernameTextfield.sendKeys(autotestUser.getUsername().substring(0, autotestUser.getUsername().indexOf("@")));
+        fillTextfieldWithData(usernameTextfield, autotestUser.getUsername().substring(0, autotestUser.getUsername().indexOf("@")));
         submitButton.click();
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(passwordTextfield));
         passwordTextfield.sendKeys(autotestUser.getPassword());
         submitButton.click();
+    }
+
+    private void fillTextfieldWithData(WebElement textfield, String data) {
+        textfield.click();
+        textfield.clear();
+        textfield.sendKeys(data);
     }
 
     public void logOff() {
@@ -131,34 +140,34 @@ public class MailRuCommonPage {
         assertTrue(driver.getTitle().contains("Входящие"));
     }
 
-    public void createNewEmail(Emails autotestEmail) {
+    public void createNewEmail(Emails autotestEmail, MailRuData mailOption) {
         createNewEmailButton.click();
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(newEmailWindow));
         fillNewEmailData(autotestEmail);
+        switch (mailOption) {
+            case NEW_EMAIL_SEND:
+                sendNewEmailButton.click();
+                break;
+            case NEW_EMAIL_SAVE:
+                saveNewEmailButton.click();
+                break;
+            case NEW_EMAIL_CANCEL:
+                abortNewEmailButton.click();
+                break;
+        }
 
-    }
-
-    private void fillNewEmailData(Emails autotestEmail) {
-        addresseeTextfield.sendKeys(autotestEmail.getAddressee());
-        subjectTextfield.sendKeys(autotestEmail.getSubject());
-        newEMailTextarea.sendKeys(autotestEmail.getText());
-    }
-
-    public void saveAsDraftAndClose() {
-        saveNewEmailButton.click();
         WebDriverWait driverWait = new WebDriverWait(driver, 10);
         driverWait.until(ExpectedConditions.visibilityOf(saveEMailToaster));
         closeNewEmailWindowButton.click();
         // for some reason invisibilityOf method doesn't work when WebElement is passed as an argument
         //new WebDriverWait(driver, 10 ).until(ExpectedConditions.invisibilityOf(newEmailWindow));
         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
-
     }
 
-    public void checkEmailIsPresentInDraftFolder(Emails autotestEmail) {
-        openFolder(DRAFT);
-        new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(folderBasicTable));
-        assertTrue(driver.findElement(By.xpath("//*[text()='" + autotestEmail.getSubject() + "']")).getText().contains("Test e-mail"));
+    private void fillNewEmailData(Emails autotestEmail) {
+        addresseeTextfield.sendKeys(autotestEmail.getAddressee());
+        subjectTextfield.sendKeys(autotestEmail.getSubject());
+        newEMailTextarea.sendKeys(autotestEmail.getText());
     }
 
     public void checkContentOfDraftEmail(Emails autotestEmail) {
@@ -172,24 +181,31 @@ public class MailRuCommonPage {
         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
 
-    public void sendEmailFromDraft(Emails autotestEmail) {
-        driver.findElement(By.xpath("//*[text()='" + autotestEmail.getSubject() + "']")).click();
-        WebDriverWait driverWait = new WebDriverWait(driver, 10);
-        driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
+    public void sendEmailFromDraftFolder(Emails autotestEmail) {
+        findAndOpenEMail(autotestEmail, DRAFT);
+        numberOfEmailsInFolderCounter = driver.findElements(By.xpath("//div[contains(@class, 'dataset__items')]/a")).size();
         sendNewEmailButton.click();
+        WebDriverWait driverWait = new WebDriverWait(driver, 10);
         driverWait.until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
         closeConfirmationWindowButton.click();
         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
 
-    public void checkEmailIsNotInTheDraftFolder(Emails autotestEmail) {
-        new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(By.
-                xpath("//div[contains(@class, 'dataset__items')]/a//span[text()='" + autotestEmail.getSubject() + "']"), 0));
+    private void findAndOpenEMail(Emails eMailName, MailRuData folderName) {
+        checkEmailIsPresentInTheFolder(eMailName, folderName);
+        driver.findElement(By.xpath("//*[text()='" + eMailName.getSubject() + "']")).click();
+        WebDriverWait driverWait = new WebDriverWait(driver, 10);
+        driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
+    }
+
+    public void checkEmailIsNotInTheFolder(Emails autotestEmail, MailRuData folderName) {
+        openFolder(folderName);
+        new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(By.xpath("//div[contains(@class, 'dataset__items')]/a"), numberOfEmailsInFolderCounter - 1));
         assertFalse(folderBasicTable.getText().contains(autotestEmail.getSubject()));
     }
 
-    public void checkEmailIsPresentInSentFolder(Emails autotestEmail) {
-        openFolder(SENT);
+    public void checkEmailIsPresentInTheFolder(Emails autotestEmail, MailRuData folderName) {
+        openFolder(folderName);
         assertTrue(folderBasicTable.getText().contains(autotestEmail.getSubject()));
     }
 }
