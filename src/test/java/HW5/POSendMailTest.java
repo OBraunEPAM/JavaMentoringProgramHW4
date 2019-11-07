@@ -1,5 +1,6 @@
 package HW5;
 
+import Exceptions.NoSuchEMailException;
 import common.SetupClass;
 import org.testng.annotations.*;
 
@@ -9,7 +10,7 @@ import static enums.MailRuData.*;
 
 public class POSendMailTest extends SetupClass {
 
-    @BeforeMethod(alwaysRun = true)
+    @BeforeClass(alwaysRun = true)
     private void loginAsDefaultUser() {
         commonPage.open(MAIL_RU_URL);
         commonPage.checkTitle(MAIL_RU_TITLE);
@@ -17,22 +18,22 @@ public class POSendMailTest extends SetupClass {
         commonPage.checkLoginIsSuccesful();
     }
 
-    @AfterMethod(alwaysRun = true)
+    @AfterClass(alwaysRun = true)
     private void logOff() {
         commonPage.logOff();
     }
 
     @Test
-    public void checkEMailCanBeCreated() {
-        commonPage.createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SAVE);
+    public void checkEMailCanBeCreated() throws NoSuchEMailException {
+        commonPage.createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SAVE_AS_DRAFT);
 
         commonPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, DRAFT);
 
-        commonPage.checkContentOfDraftEmail(AUTOTEST_EMAIL);
+        commonPage.checkContentOfEmail(AUTOTEST_EMAIL, DRAFT);
     }
 
     @Test
-    public void checkEMailCanBeSent() {
+    public void checkEMailCanBeSent() throws NoSuchEMailException {
         commonPage.sendEmailFromDraftFolder(AUTOTEST_EMAIL);
 
         commonPage.checkEmailIsNotInTheFolder(AUTOTEST_EMAIL, DRAFT);

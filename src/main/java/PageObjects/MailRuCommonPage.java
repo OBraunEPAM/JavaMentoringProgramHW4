@@ -1,5 +1,6 @@
 package PageObjects;
 
+import Exceptions.NoSuchEMailException;
 import enums.Credentials;
 import enums.Emails;
 import enums.MailRuData;
@@ -19,7 +20,7 @@ public class MailRuCommonPage {
 
     private WebDriver driver;
 
-    static int numberOfEmailsInFolderCounter;
+    private static int numberOfEmailsInFolderCounter;
 
     /**
      * General elements
@@ -50,6 +51,9 @@ public class MailRuCommonPage {
 
     @FindBy(xpath = "//div[contains(@class,'sidebar_closed')]/div/div[2]//a/div/div[2]")
     private List<WebElement> foldersSidebar;
+
+    @FindBy(xpath = "//div[contains(@class, 'dataset__items')]/a")
+    private List<WebElement> numberOfEmailsInFolder;
 
     @FindBy(xpath = "//div[contains(@class,'portal-menu')]")
     private WebElement basicLoginMailTable;
@@ -140,6 +144,12 @@ public class MailRuCommonPage {
         assertTrue(driver.getTitle().contains("Входящие"));
     }
 
+    private void fillNewEmailData(Emails autotestEmail) {
+        addresseeTextfield.sendKeys(autotestEmail.getAddressee());
+        subjectTextfield.sendKeys(autotestEmail.getSubject());
+        newEMailTextarea.sendKeys(autotestEmail.getText());
+    }
+
     public void createNewEmail(Emails autotestEmail, MailRuData mailOption) {
         createNewEmailButton.click();
         new WebDriverWait(driver, 10).until(ExpectedConditions.visibilityOf(newEmailWindow));
@@ -148,14 +158,13 @@ public class MailRuCommonPage {
             case NEW_EMAIL_SEND:
                 sendNewEmailButton.click();
                 break;
-            case NEW_EMAIL_SAVE:
+            case NEW_EMAIL_SAVE_AS_DRAFT:
                 saveNewEmailButton.click();
                 break;
             case NEW_EMAIL_CANCEL:
                 abortNewEmailButton.click();
                 break;
         }
-
         WebDriverWait driverWait = new WebDriverWait(driver, 10);
         driverWait.until(ExpectedConditions.visibilityOf(saveEMailToaster));
         closeNewEmailWindowButton.click();
@@ -164,13 +173,8 @@ public class MailRuCommonPage {
         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
 
-    private void fillNewEmailData(Emails autotestEmail) {
-        addresseeTextfield.sendKeys(autotestEmail.getAddressee());
-        subjectTextfield.sendKeys(autotestEmail.getSubject());
-        newEMailTextarea.sendKeys(autotestEmail.getText());
-    }
-
-    public void checkContentOfDraftEmail(Emails autotestEmail) {
+    public void checkContentOfEmail(Emails autotestEmail, MailRuData folderName) throws NoSuchEMailException {
+        checkEmailIsPresentInTheFolder(autotestEmail, folderName);
         driver.findElement(By.xpath("//*[text()='" + autotestEmail.getSubject() + "']")).click();
         WebDriverWait driverWait = new WebDriverWait(driver, 10);
         driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
@@ -181,9 +185,9 @@ public class MailRuCommonPage {
         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
 
-    public void sendEmailFromDraftFolder(Emails autotestEmail) {
+    public void sendEmailFromDraftFolder(Emails autotestEmail) throws NoSuchEMailException {
         findAndOpenEMail(autotestEmail, DRAFT);
-        numberOfEmailsInFolderCounter = driver.findElements(By.xpath("//div[contains(@class, 'dataset__items')]/a")).size();
+        numberOfEmailsInFolderCounter = numberOfEmailsInFolder.size();
         sendNewEmailButton.click();
         WebDriverWait driverWait = new WebDriverWait(driver, 10);
         driverWait.until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
@@ -191,7 +195,7 @@ public class MailRuCommonPage {
         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
 
-    private void findAndOpenEMail(Emails eMailName, MailRuData folderName) {
+    private void findAndOpenEMail(Emails eMailName, MailRuData folderName) throws NoSuchEMailException {
         checkEmailIsPresentInTheFolder(eMailName, folderName);
         driver.findElement(By.xpath("//*[text()='" + eMailName.getSubject() + "']")).click();
         WebDriverWait driverWait = new WebDriverWait(driver, 10);
@@ -200,12 +204,16 @@ public class MailRuCommonPage {
 
     public void checkEmailIsNotInTheFolder(Emails autotestEmail, MailRuData folderName) {
         openFolder(folderName);
-        new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(By.xpath("//div[contains(@class, 'dataset__items')]/a"), numberOfEmailsInFolderCounter - 1));
+        if (numberOfEmailsInFolderCounter == 2) {
+            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(By.xpath("//div[contains(@class, 'dataset__items')]/a"), 0));
+        } else {
+            new WebDriverWait(driver, 10).until(ExpectedConditions.numberOfElementsToBe(By.xpath("//div[contains(@class, 'dataset__items')]/a"), numberOfEmailsInFolderCounter - 1));
+        }
         assertFalse(folderBasicTable.getText().contains(autotestEmail.getSubject()));
     }
 
-    public void checkEmailIsPresentInTheFolder(Emails autotestEmail, MailRuData folderName) {
+    public void checkEmailIsPresentInTheFolder(Emails emailName, MailRuData folderName) throws NoSuchEMailException {
         openFolder(folderName);
-        assertTrue(folderBasicTable.getText().contains(autotestEmail.getSubject()));
+        if (!(folderBasicTable.getText().contains(emailName.getSubject()))) throw new NoSuchEMailException(emailName, folderName);
     }
 }
