@@ -10,7 +10,7 @@ import static enums.MailRuData.*;
 
 public class POSendMailTest extends SetupClass {
 
-    @BeforeClass(alwaysRun = true)
+    @BeforeMethod(alwaysRun = true)
     private void loginAsDefaultUser() {
         commonPage.open(MAIL_RU_URL);
         commonPage.checkTitle(MAIL_RU_TITLE);
@@ -18,7 +18,7 @@ public class POSendMailTest extends SetupClass {
         commonPage.checkLoginIsSuccesful();
     }
 
-    @AfterClass(alwaysRun = true)
+    @AfterMethod(alwaysRun = true)
     private void logOff() {
         commonPage.logOff();
     }
@@ -39,5 +39,14 @@ public class POSendMailTest extends SetupClass {
         commonPage.checkEmailIsNotInTheFolder(AUTOTEST_EMAIL, DRAFT);
 
         commonPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, SENT);
+    }
+
+    @Test
+    public void checkSentEMailIsPresentInInbox() throws NoSuchEMailException {
+        commonPage.createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SEND);
+
+        commonPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, INBOX);
+
+        commonPage.checkContentOfEmail(AUTOTEST_EMAIL, INBOX);
     }
 }
