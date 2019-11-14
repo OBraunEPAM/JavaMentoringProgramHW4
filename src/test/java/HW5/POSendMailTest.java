@@ -7,15 +7,19 @@ import org.testng.annotations.*;
 import static enums.Credentials.AUTOTEST_USER;
 import static enums.Emails.AUTOTEST_EMAIL;
 import static enums.MailRuData.*;
+import static enums.SetupEnums.*;
 
 public class POSendMailTest extends SetupClass {
 
+    @BeforeClass(alwaysRun = true)
+    private void setWebDriverType() throws Exception {
+        // parameter could be either WEB_DRIVER or REMOTE_WEB_DRIVER. In last case Selenium grid must be running
+        setupDriver(REMOTE_WEB_DRIVER);
+    }
+
     @BeforeMethod(alwaysRun = true)
     private void loginAsDefaultUser() {
-        commonPage.open(MAIL_RU_URL);
-        commonPage.checkTitle(MAIL_RU_TITLE);
         commonPage.login(AUTOTEST_USER);
-        commonPage.checkLoginIsSuccesful();
     }
 
     @AfterMethod(alwaysRun = true)
@@ -48,5 +52,7 @@ public class POSendMailTest extends SetupClass {
         commonPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, INBOX);
 
         commonPage.checkContentOfEmail(AUTOTEST_EMAIL, INBOX);
+
+        commonPage.clearFolder(SENT, DRAFT, INBOX);
     }
 }
