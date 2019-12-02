@@ -4,12 +4,12 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.Test;
-import common.SetupClass;
+import utils.Setup;
 
 import static org.testng.Assert.*;
 
 
-public class MainClassTest extends SetupClass {
+public class MainClassTest extends Setup {
 
     private WebElement loginForm;
     private WebElement passwordForm;
