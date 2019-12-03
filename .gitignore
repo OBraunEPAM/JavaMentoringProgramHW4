@@ -2,7 +2,6 @@
 .log
 .idea
 /target
-target/classes
+/my-external-framework/target/*
 /test-output
 /bin
-.iml
