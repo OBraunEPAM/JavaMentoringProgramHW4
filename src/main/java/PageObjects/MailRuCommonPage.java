@@ -13,7 +13,7 @@ import static enums.MailRuData.*;
 
 public class MailRuCommonPage extends PageObject {
 
-    protected WebDriverWait driverWait;
+    WebDriverWait driverWait;
 
     /**
      * General elements
@@ -31,7 +31,7 @@ public class MailRuCommonPage extends PageObject {
     private WebElement loginLink;
 
     @FindBy(xpath = "//div[contains(@class,'portal-menu')]")
-    public WebElement basicLoginMailTable;
+    private WebElement basicLoginMailTable;
 
     public MailRuCommonPage(WebDriver driver) {
         super(driver);
@@ -46,7 +46,7 @@ public class MailRuCommonPage extends PageObject {
         driverWait.until(ExpectedConditions.visibilityOf(passwordTextfield));
         fillTextfieldWithData(passwordTextfield, autotestUser.getPassword());
         pressEnter(passwordTextfield);
-        checkLoginIsSuccesful();
+        checkLoginIsSuccessful();
     }
 
     private void pressEnter(WebElement locator) {
@@ -64,17 +64,17 @@ public class MailRuCommonPage extends PageObject {
         driverWait.until(ExpectedConditions.visibilityOf(loginLink));
     }
 
-    protected Object getElementAttributeUsingJS(String attribute, WebElement wb) {
+    Object getElementAttributeUsingJS(String attribute, WebElement wb) {
         String jsCode = String.format("return arguments[0].getAttribute(\"%s\")", attribute);
         return ((JavascriptExecutor) driver).executeScript(jsCode, wb);
     }
 
-    protected Object clickElementUsingJS(WebElement element) {
+    Object clickElementUsingJS(WebElement element) {
         String jsCode = String.format("return arguments[0].click();");
         return ((JavascriptExecutor) driver).executeScript(jsCode, element);
     }
 
-    protected void checkLoginIsSuccesful() {
+    private void checkLoginIsSuccessful() {
         new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOf(basicLoginMailTable));
         checkTitle(LOG_IN_TITLE);
     }

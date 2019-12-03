@@ -38,7 +38,7 @@ public class POSendMailTest extends Setup {
 
     @AfterMethod(alwaysRun = true)
     private void logOff() {
-        commonPage.logOff();
+        folderElementsPage.logOff();
     }
 
     @Test

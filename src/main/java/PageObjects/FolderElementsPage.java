@@ -63,31 +63,31 @@ public class FolderElementsPage extends MailRuCommonPage {
     private List<WebElement> eMailInterlocutors;
 
     @FindBy(xpath = "//div[contains(@style, 'display: table;')]")
-    public WebElement folderBasicTable;
+    private WebElement folderBasicTable;
 
     @FindBy(xpath = "//div[contains(@class,'sidebar_closed')]/div/div[2]//a/div/div[2]")
-    public List<WebElement> foldersSidebar;
+    private List<WebElement> foldersSidebar;
 
     @FindBy(xpath = "//div[contains(@class, 'dataset__items')]/a")
-    public List<WebElement> numberOfEmailsInFolder;
+    private List<WebElement> numberOfEmailsInFolder;
 
     @FindBy(xpath = "//span[@title='Написать письмо']")
-    public WebElement createNewEmailButton;
+    private WebElement createNewEmailButton;
 
     @FindBy(xpath = "//*[@title='Выделить все']")
-    public WebElement selectAllButton;
+    private WebElement selectAllButton;
 
     @FindBy(xpath = "//*[@title='Удалить']")
-    public WebElement deleteButton;
+    private WebElement deleteButton;
 
     @FindBy(xpath = "//div[@class='dimmer']/..//*[text()='Очистить']")
-    public WebElement clearButton;
+    private WebElement clearButton;
 
     @FindBy(xpath = "//div[contains(@class, 'dimmer')]")
     private WebElement newDialogWindow;
 
     @FindBy(xpath = "//div[contains(@class,'octopus_full')]")
-    public WebElement emptyFolderLogo;
+    private WebElement emptyFolderLogo;
 
     public FolderElementsPage(WebDriver driver) {
         super(driver);

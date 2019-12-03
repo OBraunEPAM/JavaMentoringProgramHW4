@@ -2,5 +2,7 @@
 .log
 .idea
 /target
+target/classes
 /test-output
 /bin
+.iml
