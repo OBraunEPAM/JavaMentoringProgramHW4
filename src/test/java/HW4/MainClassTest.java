@@ -1,8 +1,11 @@
 package HW4;
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 import utils.Setup;
 
@@ -17,6 +20,15 @@ public class MainClassTest extends Setup {
     private WebElement basicFolderTable;
     private WebElement subjectTitleField;
     private WebElement closeNewEmailDialogButton;
+
+    private WebDriver driver;
+    private WebDriverWait driverWait;
+
+    @BeforeClass
+    private void prepareDriver() throws Exception {
+        driver = getDriver();
+        driverWait = getDriverWait();
+    }
 
     @Test
     public void checkAnEMailCreation() {

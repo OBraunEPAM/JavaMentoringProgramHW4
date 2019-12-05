@@ -20,8 +20,8 @@ import static java.lang.System.setProperty;
 
 public class Setup {
 
-    protected static WebDriver driver = null;
-    protected static WebDriverWait driverWait = null;
+    private static WebDriver driver = null;
+    private static WebDriverWait driverWait = null;
 
     @BeforeSuite(alwaysRun = true)
     public void setUpDriverDirectory() {
@@ -58,6 +58,16 @@ public class Setup {
 
     private void setDriverWait() {
         driverWait = new WebDriverWait(driver, 10);
+    }
+
+    protected WebDriver getDriver() throws Exception {
+        if (driver == null) setupDriver(WEB_DRIVER);
+        return driver;
+    }
+
+    protected WebDriverWait getDriverWait() {
+        if (driverWait == null) setDriverWait();
+        return driverWait;
     }
 
     private void setRemoteDriver() {

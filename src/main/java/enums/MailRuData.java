@@ -13,7 +13,6 @@ public enum MailRuData {
     SENT("Отправленные"),
     DRAFT("Черновики");
 
-
     public String value;
 
     MailRuData(String value) {
