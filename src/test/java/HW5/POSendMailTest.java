@@ -1,72 +1,80 @@
 package HW5;
 
-import Exceptions.NoSuchEMailException;
-import PageObjects.FolderElementsPage;
-import PageObjects.MailRuCommonPage;
+import tests.Tests;
+import utils.exceptions.NoSuchEMailException;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import utils.Setup;
 
-import static enums.Credentials.AUTOTEST_USER;
-import static enums.Emails.AUTOTEST_EMAIL;
-import static enums.MailRuData.DRAFT;
-import static enums.MailRuData.NEW_EMAIL_SAVE_AS_DRAFT;
-import static enums.MailRuData.SENT;
-import static enums.MailRuData.NEW_EMAIL_SEND;
-import static enums.MailRuData.INBOX;
-import static enums.SetupEnums.WEB_DRIVER;
+import static utils.enums.Credentials.AUTOTEST_USER;
+import static utils.enums.Emails.AUTOTEST_EMAIL;
+import static utils.enums.MailRuData.DRAFT;
+import static utils.enums.MailRuData.SENT;
+import static utils.enums.MailRuData.NEW_EMAIL_SEND;
+import static utils.enums.MailRuData.INBOX;
+import static utils.enums.SetupEnums.WEB_DRIVER;
 
-public class POSendMailTest extends Setup {
-
-    private MailRuCommonPage commonPage;
-    private FolderElementsPage folderElementsPage;
+public class POSendMailTest extends Tests {
 
     @BeforeClass(alwaysRun = true)
-    private void setWebDriverType() throws Exception {
+    private void setWebDriverType() {
         // parameter could be either WEB_DRIVER or REMOTE_WEB_DRIVER. In last case Selenium grid must be running
         setupDriver(WEB_DRIVER);
-        commonPage = initPage(MailRuCommonPage.class);
-        folderElementsPage = initPage(FolderElementsPage.class);
     }
 
     @BeforeMethod(alwaysRun = true)
     private void loginAsDefaultUser() {
-        commonPage.login(AUTOTEST_USER);
+        onCommonPage().login(AUTOTEST_USER);
     }
 
     @AfterMethod(alwaysRun = true)
     private void logOff() {
-        folderElementsPage.logOff();
+        onCommonPage().logOff();
     }
 
     @Test
     public void checkEMailCanBeCreated() throws NoSuchEMailException {
-        folderElementsPage.createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SAVE_AS_DRAFT);
 
-        folderElementsPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, DRAFT);
+        onFolderElementsPage().openNewEmailForm();
 
-        folderElementsPage.checkContentOfEmail(AUTOTEST_EMAIL, DRAFT);
+        onFolderElementsPage().fillNewEmail(AUTOTEST_EMAIL);
+
+        onFolderElementsPage().saveEmailAsDraft();
+
+        onFolderElementsPage().openDraftFolder();
+
+        onFolderElementsPage().checkEmailIsInDraftFolder(AUTOTEST_EMAIL);
+
+        onFolderElementsPage().checkContentOfEmailInDraft(AUTOTEST_EMAIL);
+
+        onFolderElementsPage().closeEmail();
+
+//        onFolderElementsPage().checkEmailIsInTheFolder(AUTOTEST_EMAIL, DRAFT, true);
     }
 
-    @Test
-    public void checkEMailCanBeSent() throws NoSuchEMailException {
-        folderElementsPage.sendEmailFromDraftFolder(AUTOTEST_EMAIL);
-
-        folderElementsPage.checkEmailIsNotInTheFolder(AUTOTEST_EMAIL, DRAFT);
-
-        folderElementsPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, SENT);
-    }
-
-    @Test
-    public void checkSentEMailIsPresentInInbox() throws NoSuchEMailException {
-        folderElementsPage.createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SEND);
-
-        folderElementsPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, INBOX);
-
-        folderElementsPage.checkContentOfEmail(AUTOTEST_EMAIL, INBOX);
-
-        folderElementsPage.clearFolder(SENT, DRAFT, INBOX);
-    }
+//    @Test
+//    public void checkEMailCanBeSent() throws NoSuchEMailException {
+//
+//        onFolderElementsPage().openDraftFolder();
+//
+//        onFolderElementsPage().getElementVisibility(AUTOTEST_EMAIL);
+//
+//        onFolderElementsPage().sendEmailFromDraftFolder(AUTOTEST_EMAIL);
+//
+//        onFolderElementsPage().checkEmailIsInTheFolder(AUTOTEST_EMAIL, DRAFT, false);
+//
+//        onFolderElementsPage().checkEmailIsInTheFolder(AUTOTEST_EMAIL, SENT, true);
+//    }
+//
+//    @Test
+//    public void checkSentEMailIsPresentInInbox() throws NoSuchEMailException {
+//        onFolderElementsPage().createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SEND);
+//
+//        onFolderElementsPage().checkEmailIsInTheFolder(AUTOTEST_EMAIL, INBOX, true);
+//
+//        onFolderElementsPage().checkContentOfEmailInDraft(AUTOTEST_EMAIL, INBOX);
+//
+//        onFolderElementsPage().clearFolder(SENT, DRAFT, INBOX);
+//    }
 }

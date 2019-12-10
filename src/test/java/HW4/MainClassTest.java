@@ -7,7 +7,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import utils.Setup;
+import config.Setup;
 
 import static org.testng.Assert.*;
 
@@ -62,7 +62,7 @@ public class MainClassTest extends Setup {
 
         subjectTitleField = driver.findElement(By.xpath("//input[@name='Subject']"));
 
-        subjectTitleField.sendKeys("Test e-mail");
+        subjectTitleField.sendKeys("Tests e-mail");
         driver.findElement(By.xpath("//div[contains(@class, 'editable-container')]/div[1]")).sendKeys("Hello! This is a test e-mail.");
 
         // 5 save e-mail as a draft
@@ -77,19 +77,19 @@ public class MainClassTest extends Setup {
         basicFolderTable = driver.findElement(By.xpath("//div[contains(@style, 'display: table;')]"));
         driverWait.until(ExpectedConditions.visibilityOf(basicFolderTable));
 
-        assertTrue(driver.findElement(By.xpath("//*[text()='Test e-mail']")).getText().contains("Test e-mail"));
+        assertTrue(driver.findElement(By.xpath("//*[text()='Tests e-mail']")).getText().contains("Tests e-mail"));
     }
 
     @Test
     public void checkContentOfEMailIsCorrect() {
         // 7 verify that content of e-mail is correct
-        driver.findElement(By.xpath("//*[text()='Test e-mail']")).click();
+        driver.findElement(By.xpath("//*[text()='Tests e-mail']")).click();
         driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@class, 'editable-container')]")));
         assertEquals(driver.findElement(By.xpath("//div[contains(@class, 'contactsContainer')]")).getText(), "autotest_autotest@mail.ru");
 
         subjectTitleField = driver.findElement(By.xpath("//input[@name='Subject']"));
 
-        assertEquals(subjectTitleField.getAttribute("value"), "Test e-mail");
+        assertEquals(subjectTitleField.getAttribute("value"), "Tests e-mail");
         assertTrue(driver.findElement(By.xpath("//div[contains(@class, 'editable-container')]")).getText().contains("Hello! This is a test e-mail."));
     }
 
@@ -106,13 +106,13 @@ public class MainClassTest extends Setup {
 
         // 9 verify that the e-mail disappeared from 'Drafts' folder
         driverWait.until(ExpectedConditions.numberOfElementsToBe(By.xpath("//div[contains(@class, 'dataset__items')]/a"), 0));
-        assertFalse(basicFolderTable.getText().contains("Test e-mail"));
+        assertFalse(basicFolderTable.getText().contains("Tests e-mail"));
 
         // 10 verify the the e-mail is in 'Sent' folder
         driver.findElement(By.xpath("//div[text()='Отправленные']")).click();
         driverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath("//div[contains(@style, 'display: table;')]")));
 
-        assertTrue(driver.findElement(By.xpath("//div[contains(@style, 'display: table;')]")).getText().contains("Test e-mail"));
+        assertTrue(driver.findElement(By.xpath("//div[contains(@style, 'display: table;')]")).getText().contains("Tests e-mail"));
 
         // 11 log off
         driver.findElement(By.xpath("//a[@title='выход']")).click();
