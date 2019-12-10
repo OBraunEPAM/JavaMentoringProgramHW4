@@ -6,6 +6,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import page_objects.asserts.PageObjectAsserts;
 import utils.enums.Credentials;
 
@@ -41,6 +42,10 @@ public abstract class PageObject extends PageObjectAsserts {
     public void clearAndSelectTextfield(WebElement locator) {
         locator.click();
         locator.click();
+    }
+
+    public void waitUntilElementIsVisible(WebElement element) {
+        driverWait.until(ExpectedConditions.visibilityOf(element));
     }
 
 }

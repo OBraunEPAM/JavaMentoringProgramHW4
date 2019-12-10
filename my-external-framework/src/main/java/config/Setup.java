@@ -23,21 +23,14 @@ public class Setup {
     private static WebDriver driver = null;
     private static WebDriverWait driverWait = null;
 
-    @BeforeSuite(alwaysRun = true)
-    public void setUpDriverDirectory() {
-        setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
-    }
-
-    @AfterSuite(alwaysRun = true)
-    public void tearDown() {
-        driver.quit();
-    }
-
     protected WebDriver setupDriver(SetupEnums type) throws NullPointerException {
         if (type.equals(REMOTE_WEB_DRIVER)) {
             setRemoteDriver();
         } else if (type.equals(WEB_DRIVER)) {
-            if (driver == null) driver = new ChromeDriver();
+            if (driver == null) {
+                setProperty("webdriver.chrome.driver", "src\\main\\resources\\chromedriver.exe");
+                driver = new ChromeDriver();
+            }
             driver.manage().window().maximize();
         } else {
             throw new NullPointerException("There is no such driver type");

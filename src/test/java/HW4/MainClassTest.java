@@ -25,7 +25,7 @@ public class MainClassTest extends Setup {
     private WebDriverWait driverWait;
 
     @BeforeClass
-    private void prepareDriver() throws Exception {
+    private void prepareDriver() {
         driver = getDriver();
         driverWait = getDriverWait();
     }

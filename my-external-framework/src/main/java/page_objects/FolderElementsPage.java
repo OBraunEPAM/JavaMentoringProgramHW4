@@ -1,5 +1,7 @@
 package page_objects;
 
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.Factory;
 import utils.exceptions.NoSuchEMailException;
 import utils.enums.Emails;
 import utils.enums.MailRuData;
@@ -78,8 +80,12 @@ public class FolderElementsPage extends PageObject {
     @FindBy(xpath = "//div[contains(@class,'octopus_full')]")
     private WebElement emptyFolderLogo;
 
+    @FindBy(xpath = "//div[text()='Черновики']")
+    private WebElement draftFolderOpeningButton;
+
     public FolderElementsPage(WebDriver driver) {
         super(driver);
+        this.driverWait = new WebDriverWait(driver, 10);
     }
 
     public void fillEmailBodyTextfield(String text) {
@@ -94,73 +100,19 @@ public class FolderElementsPage extends PageObject {
         addresseeTextfield.sendKeys(addressee);
     }
 
-    public void openFolder(MailRuData folderName) {
-        for (WebElement link : foldersSidebar) {
-            if (link.getText().contains(folderName.value)) {
-                link.click();
-                driverWait.until(ExpectedConditions.visibilityOf(folderBasicTable));
-            }
-        }
-    }
-
-    public void sendEmailFromDraftFolder(Emails autotestEmail) throws NoSuchEMailException {
-        findAndOpenEMail(autotestEmail, DRAFT);
-        numberOfEmailsInFolderCounter = numberOfEmailsInFolder.size();
-        sendNewEmailButton.click();
-        driverWait.until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
-        closeConfirmationWindowButton.click();
-        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
-    }
-
-    public void findAndOpenEMail(Emails eMailName, MailRuData folderName) throws NoSuchEMailException {
-        checkEmailIsPresentInTheFolder(eMailName, folderName);
-        driver.findElement(By.xpath("//*[text()='" + eMailName.getSubject() + "']")).click();
-        driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
-        if (folderName.equals(DRAFT)) numberOfEmailsInFolderCounter = numberOfEmailsInFolder.size();
-    }
-
-//    public void createNewEmail(Emails autotestEmail, MailRuData mailOption) {
-//        switch (mailOption) {
-//            case NEW_EMAIL_SEND:
-//                sendNewEmailButton.click();
-//                driverWait.until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
-//                closeConfirmationWindowButton.click();
-//                break;
-//            case NEW_EMAIL_SAVE_AS_DRAFT:
-//                saveNewEmailButton.click();
-//                driverWait.until(ExpectedConditions.visibilityOf(actionToaster));
-//                closeNewEmailWindowButton.click();
-//                break;
-//            case NEW_EMAIL_CANCEL:
-//                abortNewEmailButton.click();
-//                break;
-//        }
-//        // for some reason invisibilityOf method doesn't work when WebElement is passed as an argument
-//        //driverWait.until(ExpectedConditions.invisibilityOf(newDialogWindow));
-//        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
-//    }
-
     public void clickNewEmailButton() {
         createNewEmailButton.click();
         driverWait.until(ExpectedConditions.visibilityOf(newDialogWindow));
     }
 
-    public void fillNewEmailDataAndSaveAsDraft(Emails autotestEmail) {
-        addresseeTextfield.sendKeys(autotestEmail.getAddressee());
-        subjectTextfield.sendKeys(autotestEmail.getSubject());
-        newEMailTextarea.sendKeys(autotestEmail.getText());
-        saveNewEmailButton.click();
-        driverWait.until(ExpectedConditions.visibilityOf(actionToaster));
-        closeNewEmailWindowButton.click();
-    }
-
-    public void clickOnDraftFolder() {
-
-    }
-
     public void clickSaveAsDraftButton() {
         saveNewEmailButton.click();
         driverWait.until(ExpectedConditions.visibilityOf(actionToaster));
+    }
+
+    public void clickOnDraftFolder() {
+        draftFolderOpeningButton.click();
+        waitUntilElementIsVisible(folderBasicTable);
     }
 
     public void openEmailInDraft(String subject) {
@@ -184,4 +136,60 @@ public class FolderElementsPage extends PageObject {
         closeNewEmailWindowButton.click();
         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
+
+//    public void openFolder(MailRuData folderName) {
+//        for (WebElement link : foldersSidebar) {
+//            if (link.getText().contains(folderName.value)) {
+//                link.click();
+//                driverWait.until(ExpectedConditions.visibilityOf(folderBasicTable));
+//            }
+//        }
+//    }
+
+//    public void fillNewEmailDataAndSaveAsDraft(Emails autotestEmail) {
+//        addresseeTextfield.sendKeys(autotestEmail.getAddressee());
+//        subjectTextfield.sendKeys(autotestEmail.getSubject());
+//        newEMailTextarea.sendKeys(autotestEmail.getText());
+//        saveNewEmailButton.click();
+//        driverWait.until(ExpectedConditions.visibilityOf(actionToaster));
+//        closeNewEmailWindowButton.click();
+//    }
+
+//    public void createNewEmail(Emails autotestEmail, MailRuData mailOption) {
+//        switch (mailOption) {
+//            case NEW_EMAIL_SEND:
+//                sendNewEmailButton.click();
+//                driverWait.until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
+//                closeConfirmationWindowButton.click();
+//                break;
+//            case NEW_EMAIL_SAVE_AS_DRAFT:
+//                saveNewEmailButton.click();
+//                driverWait.until(ExpectedConditions.visibilityOf(actionToaster));
+//                closeNewEmailWindowButton.click();
+//                break;
+//            case NEW_EMAIL_CANCEL:
+//                abortNewEmailButton.click();
+//                break;
+//        }
+//        // for some reason invisibilityOf method doesn't work when WebElement is passed as an argument
+//        //driverWait.until(ExpectedConditions.invisibilityOf(newDialogWindow));
+//        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
+//    }
+
+//    public void sendEmailFromDraftFolder(Emails autotestEmail) throws NoSuchEMailException {
+//        findAndOpenEMail(autotestEmail, DRAFT);
+//        numberOfEmailsInFolderCounter = numberOfEmailsInFolder.size();
+//        sendNewEmailButton.click();
+//        driverWait.until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
+//        closeConfirmationWindowButton.click();
+//        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
+//    }
+
+//    public void findAndOpenEMail(Emails eMailName, MailRuData folderName) throws NoSuchEMailException {
+//        checkEmailIsPresentInTheFolder(eMailName, folderName);
+//        driver.findElement(By.xpath("//*[text()='" + eMailName.getSubject() + "']")).click();
+//        driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
+//        if (folderName.equals(DRAFT)) numberOfEmailsInFolderCounter = numberOfEmailsInFolder.size();
+//    }
+
 }

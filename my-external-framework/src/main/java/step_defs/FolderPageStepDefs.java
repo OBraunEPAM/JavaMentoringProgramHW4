@@ -2,6 +2,7 @@ package step_defs;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import utils.enums.Emails;
 import utils.enums.MailRuData;
@@ -12,17 +13,9 @@ import static utils.enums.MailRuData.INBOX;
 
 public class FolderPageStepDefs extends StepDefs {
 
-//    public void openFolder(MailRuData folderName) {
-//        folderElementsPage.openFolder(folderName);
-//    }
-
     public void openDraftFolder() {
         folderElementsPage.clickOnDraftFolder();
     }
-
-//    public void createNewEmailAsDraft(Emails autotestEmail) {
-//        folderElementsPage.fillNewEmailDataAndSaveAsDraft(autotestEmail);
-//    }
 
     public void openNewEmailForm() {
         folderElementsPage.clickNewEmailButton();
@@ -53,7 +46,7 @@ public class FolderPageStepDefs extends StepDefs {
         folderElementsPage.clickCloseButton();
     }
 
-    //    public void clearFolder(MailRuData... folderName) {
+//    public void clearFolder(MailRuData... folderName) {
 //        for (MailRuData folder:folderName) {
 //            openFolder(folder);
 //            try {
@@ -109,4 +102,13 @@ public class FolderPageStepDefs extends StepDefs {
 //        closeConfirmationWindowButton.click();
 //        driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
 //    }
+
+//    public void createNewEmailAsDraft(Emails autotestEmail) {
+//        folderElementsPage.fillNewEmailDataAndSaveAsDraft(autotestEmail);
+//    }
+
+//    public void openFolder(MailRuData folderName) {
+//        folderElementsPage.openFolder(folderName);
+//    }
+
 }
