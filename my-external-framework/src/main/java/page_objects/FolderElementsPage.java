@@ -1,8 +1,8 @@
-package PageObjects;
+package page_objects;
 
-import Exceptions.NoSuchEMailException;
-import enums.Emails;
-import enums.MailRuData;
+import utils.exceptions.NoSuchEMailException;
+import utils.enums.Emails;
+import utils.enums.MailRuData;
 import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
@@ -13,15 +13,16 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
 
-import static enums.MailRuData.INBOX;
-import static enums.MailRuData.DRAFT;
+import static utils.enums.MailRuData.INBOX;
+import static utils.enums.MailRuData.DRAFT;
 import static org.testng.Assert.assertTrue;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertFalse;
 
-public class FolderElementsPage extends MailRuCommonPage {
+public class FolderElementsPage extends PageObject {
 
     private static int numberOfEmailsInFolderCounter;
+    private WebDriverWait driverWait;
 
     @FindBy(xpath = "//*[@title='Закрыть']")
     private WebElement closeNewEmailWindowButton;
@@ -89,8 +90,15 @@ public class FolderElementsPage extends MailRuCommonPage {
     @FindBy(xpath = "//div[contains(@class,'octopus_full')]")
     private WebElement emptyFolderLogo;
 
+    @FindBy(xpath = "//a[@title='выход']")
+    private WebElement logOffButton;
+
+    @FindBy(xpath = "//a[text()='Вход']")
+    private WebElement loginLink;
+
     public FolderElementsPage(WebDriver driver) {
         super(driver);
+        this.driverWait = new WebDriverWait(driver, 10);
     }
 
     public void openFolder(MailRuData folderName) {
@@ -199,5 +207,10 @@ public class FolderElementsPage extends MailRuCommonPage {
     public void checkEmailIsPresentInTheFolder(Emails emailName, MailRuData folderName) throws NoSuchEMailException {
         openFolder(folderName);
         if (!(folderBasicTable.getText().contains(emailName.getSubject()))) throw new NoSuchEMailException(emailName, folderName);
+    }
+
+    public void logOff() {
+        logOffButton.click();
+        driverWait.until(ExpectedConditions.visibilityOf(loginLink));
     }
 }

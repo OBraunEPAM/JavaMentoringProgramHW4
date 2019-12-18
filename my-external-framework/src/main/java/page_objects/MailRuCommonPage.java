@@ -1,6 +1,6 @@
-package PageObjects;
+package page_objects;
 
-import enums.Credentials;
+import utils.enums.Credentials;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
@@ -8,27 +8,17 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import page_objects.PageObject;
 
-
-import static enums.MailRuData.*;
+import static utils.enums.MailRuData.*;
 
 public class MailRuCommonPage extends PageObject {
 
     WebDriverWait driverWait;
 
-    /**
-     * General elements
-     */
     @FindBy(xpath = "//input[@id='mailbox:login']")
     private WebElement usernameTextfield;
 
     @FindBy(xpath = "//input[@id='mailbox:password']")
     private WebElement passwordTextfield;
-
-    @FindBy(xpath = "//a[@title='выход']")
-    private WebElement logOffButton;
-
-    @FindBy(xpath = "//a[text()='Вход']")
-    private WebElement loginLink;
 
     @FindBy(xpath = "//div[contains(@class,'portal-menu')]")
     private WebElement basicLoginMailTable;
@@ -59,20 +49,7 @@ public class MailRuCommonPage extends PageObject {
         new Actions(driver).sendKeys(textfield, data).build().perform();
     }
 
-    public void logOff() {
-        logOffButton.click();
-        driverWait.until(ExpectedConditions.visibilityOf(loginLink));
-    }
 
-    Object getElementAttributeUsingJS(String attribute, WebElement wb) {
-        String jsCode = String.format("return arguments[0].getAttribute(\"%s\")", attribute);
-        return ((JavascriptExecutor) driver).executeScript(jsCode, wb);
-    }
-
-    Object clickElementUsingJS(WebElement element) {
-        String jsCode = String.format("return arguments[0].click();");
-        return ((JavascriptExecutor) driver).executeScript(jsCode, element);
-    }
 
     private void checkLoginIsSuccessful() {
         new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOf(basicLoginMailTable));

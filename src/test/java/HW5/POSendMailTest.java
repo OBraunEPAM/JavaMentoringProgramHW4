@@ -1,22 +1,22 @@
 package HW5;
 
-import Exceptions.NoSuchEMailException;
-import PageObjects.FolderElementsPage;
-import PageObjects.MailRuCommonPage;
+import utils.exceptions.NoSuchEMailException;
+import page_objects.FolderElementsPage;
+import page_objects.MailRuCommonPage;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import utils.Setup;
+import config.Setup;
 
-import static enums.Credentials.AUTOTEST_USER;
-import static enums.Emails.AUTOTEST_EMAIL;
-import static enums.MailRuData.DRAFT;
-import static enums.MailRuData.NEW_EMAIL_SAVE_AS_DRAFT;
-import static enums.MailRuData.SENT;
-import static enums.MailRuData.NEW_EMAIL_SEND;
-import static enums.MailRuData.INBOX;
-import static enums.SetupEnums.WEB_DRIVER;
+import static org.openqa.selenium.remote.BrowserType.CHROME;
+import static utils.enums.Credentials.AUTOTEST_USER;
+import static utils.enums.Emails.AUTOTEST_EMAIL;
+import static utils.enums.MailRuData.DRAFT;
+import static utils.enums.MailRuData.NEW_EMAIL_SAVE_AS_DRAFT;
+import static utils.enums.MailRuData.SENT;
+import static utils.enums.MailRuData.NEW_EMAIL_SEND;
+import static utils.enums.MailRuData.INBOX;
 
 public class POSendMailTest extends Setup {
 
@@ -25,8 +25,7 @@ public class POSendMailTest extends Setup {
 
     @BeforeClass(alwaysRun = true)
     private void setWebDriverType() throws Exception {
-        // parameter could be either WEB_DRIVER or REMOTE_WEB_DRIVER. In last case Selenium grid must be running
-        setupDriver(WEB_DRIVER);
+        setupDriver(CHROME);
         commonPage = initPage(MailRuCommonPage.class);
         folderElementsPage = initPage(FolderElementsPage.class);
     }

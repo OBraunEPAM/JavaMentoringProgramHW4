@@ -1,7 +1,7 @@
-package Exceptions;
+package utils.exceptions;
 
-import enums.Emails;
-import enums.MailRuData;
+import utils.enums.Emails;
+import utils.enums.MailRuData;
 
 public class NoSuchEMailException extends Exception {
 
