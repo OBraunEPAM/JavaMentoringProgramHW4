@@ -101,23 +101,20 @@ public class FolderElementsPage extends PageObject {
     }
 
     public void clickNewEmailButton() {
-        createNewEmailButton.click();
-        driverWait.until(ExpectedConditions.visibilityOf(newDialogWindow));
+        robustClick(createNewEmailButton, newDialogWindow);
     }
 
     public void clickSaveAsDraftButton() {
-        saveNewEmailButton.click();
-        driverWait.until(ExpectedConditions.visibilityOf(actionToaster));
+        robustClick(saveNewEmailButton, actionToaster);
     }
 
     public void clickOnDraftFolder() {
-        draftFolderOpeningButton.click();
-        waitUntilElementIsVisible(folderBasicTable);
+        robustClick(draftFolderOpeningButton, folderBasicTable);
     }
 
     public void openEmailInDraft(String subject) {
         driver.findElement(By.xpath("//*[text()='" + subject + "']")).click();
-        driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
+        waitUntilElementIsVisible(newEMailTextarea);
     }
 
     public void checkEmailSubject(String subject) {
@@ -133,7 +130,7 @@ public class FolderElementsPage extends PageObject {
     }
 
     public void clickCloseButton() {
-        closeNewEmailWindowButton.click();
+        robustClick(closeNewEmailWindowButton);
         driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
     }
 
