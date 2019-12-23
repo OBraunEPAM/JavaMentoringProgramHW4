@@ -1,4 +1,4 @@
-package enums;
+package utils.enums;
 
 public enum SetupEnums {
 

@@ -2,5 +2,6 @@
 .log
 .idea
 /target
+/my-external-framework/target/*
 /test-output
 /bin

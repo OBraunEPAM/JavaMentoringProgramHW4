@@ -1,15 +1,18 @@
 package HW4;
 
+import decorator.WebDriverDecorator;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
-import common.SetupClass;
+import config.Setup;
 
 import static org.testng.Assert.*;
 
 
-public class MainClassTest extends SetupClass {
+public class MainClassTest extends Setup {
 
     private WebElement loginForm;
     private WebElement passwordForm;
@@ -18,10 +21,19 @@ public class MainClassTest extends SetupClass {
     private WebElement subjectTitleField;
     private WebElement closeNewEmailDialogButton;
 
+    private WebDriverDecorator driver;
+    private WebDriverWait driverWait;
+
+    @BeforeClass
+    private void prepareDriver() throws Exception {
+        driver = new WebDriverDecorator(getDriver());
+        driverWait = getDriverWait();
+    }
+
     @Test
     public void checkAnEMailCreation() {
         // 1 open site by URL
-        driver.navigate().to("https://mail.ru/");
+        driver.get("https://mail.ru/");
 
         // 2 login
         loginForm = driver.findElement(By.xpath("//input[@id='mailbox:login']"));
