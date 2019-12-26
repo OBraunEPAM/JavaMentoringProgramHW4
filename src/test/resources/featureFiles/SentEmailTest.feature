@@ -1,7 +1,7 @@
 Feature: Cucumber Sent Email Test
 
   @Smoke
-  Scenario: Sent e-mail is presented in Sent folder
+  Scenario: Sent e-mail is presented in Inbox folder
     Given I open 'MAIL_RU_URL' site
     When I login as 'AUTOTEST_USER'
     Then Title should be 'LOG_IN_TITLE'
