@@ -12,7 +12,7 @@ public class PageObject extends PageObjectAsserts {
         super(driver);
     }
 
-    protected void open(String url) {
+    public void open(String url) {
         driver.get(url);
     }
 

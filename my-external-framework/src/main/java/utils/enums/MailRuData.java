@@ -6,9 +6,9 @@ public enum MailRuData {
     MAIL_RU_TITLE("Mail.ru: почта, поиск в интернете, новости, игры"),
     LOG_OFF_TITLE("Вход - Почта Mail.ru"),
     LOG_IN_TITLE("Входящие - Почта Mail.ru"),
-    NEW_EMAIL_SEND("Отправить"),
-    NEW_EMAIL_SAVE_AS_DRAFT("Сохранить"),
-    NEW_EMAIL_CANCEL("Отменить"),
+    SEND("Отправить"),
+    SAVE_AS_DRAFT("Сохранить"),
+    CANCEL("Отменить"),
     INBOX("Входящие"),
     SENT("Отправленные"),
     DRAFT("Черновики");

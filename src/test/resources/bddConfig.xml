@@ -1,0 +1,13 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd" >
+
+<suite name="Cucumber Suite">
+
+    <test name="Cucumber Test">
+
+        <classes>
+            <class name="BDD.Runner"/>
+        </classes>
+
+    </test>
+
+</suite>

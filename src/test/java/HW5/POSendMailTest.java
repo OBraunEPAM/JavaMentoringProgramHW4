@@ -1,22 +1,15 @@
 package HW5;
 
+import org.testng.annotations.*;
 import utils.exceptions.NoSuchEMailException;
 import page_objects.FolderElementsPage;
 import page_objects.MailRuCommonPage;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
 import config.Setup;
 
 import static org.openqa.selenium.remote.BrowserType.CHROME;
 import static utils.enums.Credentials.AUTOTEST_USER;
 import static utils.enums.Emails.AUTOTEST_EMAIL;
-import static utils.enums.MailRuData.DRAFT;
-import static utils.enums.MailRuData.NEW_EMAIL_SAVE_AS_DRAFT;
-import static utils.enums.MailRuData.SENT;
-import static utils.enums.MailRuData.NEW_EMAIL_SEND;
-import static utils.enums.MailRuData.INBOX;
+import static utils.enums.MailRuData.*;
 
 public class POSendMailTest extends Setup {
 
@@ -28,6 +21,7 @@ public class POSendMailTest extends Setup {
         setupDriver(CHROME);
         commonPage = initPage(MailRuCommonPage.class);
         folderElementsPage = initPage(FolderElementsPage.class);
+        commonPage.open(MAIL_RU_URL.value);
     }
 
     @BeforeMethod(alwaysRun = true)
@@ -40,9 +34,14 @@ public class POSendMailTest extends Setup {
         folderElementsPage.logOff();
     }
 
+    @AfterClass(alwaysRun = true)
+    private void killDriver() throws Exception {
+        getDriver().quit();
+    }
+
     @Test
     public void checkEMailCanBeCreated() throws NoSuchEMailException {
-        folderElementsPage.createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SAVE_AS_DRAFT);
+        folderElementsPage.createNewEmail(AUTOTEST_EMAIL, SAVE_AS_DRAFT);
 
         folderElementsPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, DRAFT);
 
@@ -60,7 +59,7 @@ public class POSendMailTest extends Setup {
 
     @Test
     public void checkSentEMailIsPresentInInbox() throws NoSuchEMailException {
-        folderElementsPage.createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SEND);
+        folderElementsPage.createNewEmail(AUTOTEST_EMAIL, SEND);
 
         folderElementsPage.checkEmailIsPresentInTheFolder(AUTOTEST_EMAIL, INBOX);
 

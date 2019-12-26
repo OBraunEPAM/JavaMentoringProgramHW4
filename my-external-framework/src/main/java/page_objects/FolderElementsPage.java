@@ -112,12 +112,12 @@ public class FolderElementsPage extends PageObject {
 
     public void clearFolder(MailRuData... folderName) {
         WebDriverWait driverWait = new WebDriverWait(driver, 5);
-        for (MailRuData folder:folderName) {
+        for (MailRuData folder : folderName) {
             openFolder(folder);
             try {
                 selectAllButton.click();
             } catch (NoSuchElementException e) {
-                System.out.printf("%s folder is already empty", folder.value);
+                System.out.printf("%s folder is already empty \n", folder.value);
                 continue;
             }
             driverWait.until(ExpectedConditions.visibilityOf(deleteButton));
@@ -131,28 +131,31 @@ public class FolderElementsPage extends PageObject {
         }
     }
 
-    private void fillNewEmailData(Emails autotestEmail) {
+    public void fillNewEmailData(Emails autotestEmail) {
         addresseeTextfield.sendKeys(autotestEmail.getAddressee());
         subjectTextfield.sendKeys(autotestEmail.getSubject());
         newEMailTextarea.sendKeys(autotestEmail.getText());
     }
 
     public void createNewEmail(Emails autotestEmail, MailRuData mailOption) {
-        createNewEmailButton.click();
-        driverWait.until(ExpectedConditions.visibilityOf(newDialogWindow));
+        openNewEmailWindow();
         fillNewEmailData(autotestEmail);
+        newEmailOptions(mailOption);
+    }
+
+    public void newEmailOptions(MailRuData mailOption) {
         switch (mailOption) {
-            case NEW_EMAIL_SEND:
+            case SEND:
                 sendNewEmailButton.click();
                 driverWait.until(ExpectedConditions.visibilityOf(closeConfirmationWindowButton));
                 closeConfirmationWindowButton.click();
                 break;
-            case NEW_EMAIL_SAVE_AS_DRAFT:
+            case SAVE_AS_DRAFT:
                 saveNewEmailButton.click();
                 driverWait.until(ExpectedConditions.visibilityOf(actionToaster));
                 closeNewEmailWindowButton.click();
                 break;
-            case NEW_EMAIL_CANCEL:
+            case CANCEL:
                 abortNewEmailButton.click();
                 break;
         }
@@ -163,7 +166,7 @@ public class FolderElementsPage extends PageObject {
 
     public void checkContentOfEmail(Emails autotestEmail, MailRuData folderName) throws NoSuchEMailException {
         checkEmailIsPresentInTheFolder(autotestEmail, folderName);
-        driver.findElement(By.xpath("//*[text()='" + autotestEmail.getSubject() + "']")).click();
+        openEmail(autotestEmail);
         if (folderName.value.equals(DRAFT.value)) {
             driverWait.until(ExpectedConditions.visibilityOf(newEMailTextarea));
             assertEquals(filledAddresseeTextfield.getText(), autotestEmail.getAddressee());
@@ -172,10 +175,7 @@ public class FolderElementsPage extends PageObject {
             closeNewEmailWindowButton.click();
             driverWait.until(ExpectedConditions.invisibilityOfElementLocated(By.xpath("//div[contains(@class, 'dimmer')]")));
         } else {
-            driverWait.until(ExpectedConditions.visibilityOf(eMailBody));
-            assertEquals(getElementAttributeUsingJS("title", eMailInterlocutors.get(0)), autotestEmail.getAddressee());
-            assertEquals(eMailSubjectField.getText(), autotestEmail.getSubject());
-            assertTrue(eMailBody.getText().contains(autotestEmail.getText()));
+            checkContentOfEmailInboxFolder(autotestEmail);
         }
     }
 
@@ -198,7 +198,7 @@ public class FolderElementsPage extends PageObject {
         openFolder(folderName);
         if (numberOfEmailsInFolderCounter == 2) {
             driverWait.until(ExpectedConditions.numberOfElementsToBe(By.xpath("//div[contains(@class, 'dataset__items')]/a"), 0));
-        } else if (numberOfEmailsInFolderCounter != 0){
+        } else if (numberOfEmailsInFolderCounter != 0) {
             driverWait.until(ExpectedConditions.numberOfElementsToBe(By.xpath("//div[contains(@class, 'dataset__items')]/a"), numberOfEmailsInFolderCounter - 1));
         }
         assertFalse(folderBasicTable.getText().contains(autotestEmail.getSubject()));
@@ -206,11 +206,50 @@ public class FolderElementsPage extends PageObject {
 
     public void checkEmailIsPresentInTheFolder(Emails emailName, MailRuData folderName) throws NoSuchEMailException {
         openFolder(folderName);
-        if (!(folderBasicTable.getText().contains(emailName.getSubject()))) throw new NoSuchEMailException(emailName, folderName);
+        checkEmailIsInFolder(emailName, folderName);
+//        if (!(folderBasicTable.getText().contains(emailName.getSubject()))) throw new NoSuchEMailException(emailName, folderName);
     }
 
     public void logOff() {
         logOffButton.click();
         driverWait.until(ExpectedConditions.visibilityOf(loginLink));
+    }
+
+    public void openNewEmailWindow() {
+        createNewEmailButton.click();
+        driverWait.until(ExpectedConditions.visibilityOf(newDialogWindow));
+    }
+
+    public void checkEmailIsInFolder(Emails emailName) throws NoSuchEMailException {
+        try {
+            assertTrue(folderBasicTable.getText().contains(emailName.getSubject()));
+            assertTrue(folderBasicTable.getText().toLowerCase().contains(emailName.trimAddresse(emailName)));
+        } catch (NoSuchElementException ex) {
+            throw new NoSuchEMailException(emailName);
+        }
+    }
+
+    public void checkEmailIsInFolder(Emails emailName, MailRuData folderName) throws NoSuchEMailException {
+        try {
+            assertTrue(folderBasicTable.getText().contains(emailName.getSubject()));
+            assertTrue(folderBasicTable.getText().toLowerCase().contains(emailName.trimAddresse(emailName)));
+        } catch (NoSuchElementException ex) {
+            throw new NoSuchEMailException(emailName, folderName);
+        }
+    }
+
+    public void openEmail(Emails emailName) throws NoSuchEMailException {
+        try {
+            driver.findElement(By.xpath("//*[text()='" + emailName.getSubject() + "']")).click();
+        } catch (NoSuchElementException ex) {
+            throw new NoSuchEMailException(emailName);
+        }
+    }
+
+    public void checkContentOfEmailInboxFolder(Emails emailName) {
+        driverWait.until(ExpectedConditions.visibilityOf(eMailBody));
+        assertEquals(getElementAttributeUsingJS("title", eMailInterlocutors.get(0)), emailName.getAddressee());
+        assertEquals(eMailSubjectField.getText(), emailName.getSubject());
+        assertTrue(eMailBody.getText().contains(emailName.getText()));
     }
 }

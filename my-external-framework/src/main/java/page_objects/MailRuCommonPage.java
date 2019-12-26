@@ -7,6 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import page_objects.PageObject;
+import utils.enums.MailRuData;
 
 import static utils.enums.MailRuData.*;
 
@@ -29,14 +30,13 @@ public class MailRuCommonPage extends PageObject {
     }
 
     public void login(Credentials autotestUser) {
-        open(MAIL_RU_URL.value);
         checkTitle(MAIL_RU_TITLE);
         fillTextfieldWithData(usernameTextfield, autotestUser.getUsername().substring(0, autotestUser.getUsername().indexOf("@")));
         pressEnter(usernameTextfield);
         driverWait.until(ExpectedConditions.visibilityOf(passwordTextfield));
         fillTextfieldWithData(passwordTextfield, autotestUser.getPassword());
         pressEnter(passwordTextfield);
-        checkLoginIsSuccessful();
+        checkLoginIsSuccessful(LOG_IN_TITLE);
     }
 
     private void pressEnter(WebElement locator) {
@@ -49,10 +49,8 @@ public class MailRuCommonPage extends PageObject {
         new Actions(driver).sendKeys(textfield, data).build().perform();
     }
 
-
-
-    private void checkLoginIsSuccessful() {
+    public void checkLoginIsSuccessful(MailRuData title) {
         new WebDriverWait(driver, 20).until(ExpectedConditions.visibilityOf(basicLoginMailTable));
-        checkTitle(LOG_IN_TITLE);
+        checkTitle(title);
     }
 }

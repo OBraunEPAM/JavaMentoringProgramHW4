@@ -31,12 +31,7 @@ public class Setup {
 
     private static final String noSuchBrowserMessage = "There is no such driver type";
 
-    @AfterSuite(alwaysRun = true)
-    public void tearDown() {
-        driver.quit();
-    }
-
-    protected WebDriver setupDriver(String browser) throws Exception {
+    public WebDriver setupDriver(String browser) throws Exception {
         if (browser.equals(CHROME)) {
             if (driver == null) {
                 driver = new ChromeDriverCreator().createWebDriver();
@@ -50,7 +45,7 @@ public class Setup {
         return driver;
     }
 
-    protected <T> T initPage(Class<T> page) {
+    public <T> T initPage(Class<T> page) {
         T preparedDriver = null;
         try {
             preparedDriver = PageFactory.initElements(driver, page);
