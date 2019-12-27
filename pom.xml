@@ -74,6 +74,13 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>info.cukes</groupId>
+            <artifactId>cucumber-testng</artifactId>
+            <version>1.2.6</version>
+            <scope>compile</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

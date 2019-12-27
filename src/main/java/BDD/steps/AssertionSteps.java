@@ -8,7 +8,7 @@ import utils.enums.Emails;
 import utils.enums.MailRuData;
 import utils.exceptions.NoSuchEMailException;
 
-public class AssertionSteps extends Runner{
+public class AssertionSteps extends Runner {
 
     private MailRuCommonPage commonPage = setup.initPage(MailRuCommonPage.class);
     private FolderElementsPage folderElementsPage = setup.initPage(FolderElementsPage.class);
@@ -26,5 +26,10 @@ public class AssertionSteps extends Runner{
     @Then("^Content of '([^\"]*)' should match sent e-mail$")
     public void checkContentOfEmail(Emails emailName) {
         folderElementsPage.checkContentOfEmailInboxFolder(emailName);
+    }
+
+    @Then("^'([^\"]*)' shouldn't be in ([^\"]*)$")
+    public void emailShouldnTBeInFolder(Emails emailName, MailRuData folderName) {
+        folderElementsPage.checkEmailIsNotInTheFolder(emailName, folderName);
     }
 }

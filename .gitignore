@@ -5,3 +5,4 @@
 /my-external-framework/target/*
 /test-output
 /bin
+debug.log

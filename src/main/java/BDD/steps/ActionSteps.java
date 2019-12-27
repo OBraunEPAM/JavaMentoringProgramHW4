@@ -1,6 +1,8 @@
 package BDD.steps;
 
 import BDD.Runner;
+import cucumber.api.Scenario;
+import cucumber.api.java.After;
 import cucumber.api.java.en.And;
 import cucumber.api.java.en.When;
 import page_objects.FolderElementsPage;
@@ -44,4 +46,18 @@ public class ActionSteps extends Runner {
     public void iOpenEmail(Emails emailName) throws NoSuchEMailException {
         folderElementsPage.openEmail(emailName);
     }
+
+    @When("^I clear emails from ([^\"]*)$")
+    public void iClearEmailsFromFolder(MailRuData folderName) {
+        folderElementsPage.clearFolder(folderName);
+    }
+
+    @After
+    public void afterScenario(Scenario scenario) {
+        System.out.println("------------------------------");
+        System.out.println(scenario.getName() + " Status - " + scenario.getStatus());
+        System.out.println("------------------------------");
+        folderElementsPage.logOff();
+    }
+
 }
