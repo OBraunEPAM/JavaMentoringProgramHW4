@@ -1,34 +1,16 @@
 package HW5;
 
-import utils.exceptions.NoSuchEMailException;
-import page_objects.FolderElementsPage;
-import page_objects.MailRuCommonPage;
+import hooks.Hooks;
 import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import config.Setup;
+import utils.exceptions.NoSuchEMailException;
 
-import static org.openqa.selenium.remote.BrowserType.CHROME;
 import static utils.enums.Credentials.AUTOTEST_USER;
 import static utils.enums.Emails.AUTOTEST_EMAIL;
-import static utils.enums.MailRuData.DRAFT;
-import static utils.enums.MailRuData.NEW_EMAIL_SAVE_AS_DRAFT;
-import static utils.enums.MailRuData.SENT;
-import static utils.enums.MailRuData.NEW_EMAIL_SEND;
-import static utils.enums.MailRuData.INBOX;
+import static utils.enums.MailRuData.*;
 
-public class POSendMailTest extends Setup {
-
-    private MailRuCommonPage commonPage;
-    private FolderElementsPage folderElementsPage;
-
-    @BeforeClass(alwaysRun = true)
-    private void setWebDriverType() throws Exception {
-        setupDriver(CHROME);
-        commonPage = initPage(MailRuCommonPage.class);
-        folderElementsPage = initPage(FolderElementsPage.class);
-    }
+public class POSendMailTest extends Hooks {
 
     @BeforeMethod(alwaysRun = true)
     private void loginAsDefaultUser() {
@@ -40,7 +22,7 @@ public class POSendMailTest extends Setup {
         folderElementsPage.logOff();
     }
 
-    @Test
+    @Test(alwaysRun = true)
     public void checkEMailCanBeCreated() throws NoSuchEMailException {
         folderElementsPage.createNewEmail(AUTOTEST_EMAIL, NEW_EMAIL_SAVE_AS_DRAFT);
 
