@@ -2,27 +2,13 @@ package config;
 
 import factory_method.ChromeDriverCreator;
 import factory_method.FirefoxDriverCreator;
-import factory_method.WebDriverCreator;
-import org.openqa.selenium.remote.BrowserType;
-import utils.enums.SetupEnums;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.remote.UnreachableBrowserException;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterSuite;
-import org.testng.annotations.BeforeSuite;
-
-import java.net.MalformedURLException;
-import java.net.URL;
 
 import static org.openqa.selenium.remote.BrowserType.CHROME;
 import static org.openqa.selenium.remote.BrowserType.FIREFOX;
-import static utils.enums.SetupEnums.REMOTE_WEB_DRIVER;
-import static utils.enums.SetupEnums.WEB_DRIVER;
-import static java.lang.System.setProperty;
 
 public class Setup {
 
